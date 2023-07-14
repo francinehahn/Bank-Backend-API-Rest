@@ -7,6 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -22,8 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TransferenciaRepositoryTest {
     
-    /*@Autowired
+    @Autowired
     private TransferenciaRepository repository;
+
+    //Setando algumas datas para serem usadas nos testes
+    LocalDate dataInicio = LocalDate.parse("2020-02-01");
+    LocalDate dataFim = LocalDate.parse("2020-08-10");
+    Date dataInicioEditada = Date.from(dataInicio.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date dataFimEditada = Date.from(dataFim.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
     @Test
     public void testarBuscarTodasTransferencias() {
@@ -47,20 +56,20 @@ public class TransferenciaRepositoryTest {
 
     @Test
     public void testarBuscarTransferenciasPorMesAno() {
-        List<Transferencia> resposta = repository.buscarTransferenciasPorMesAno(1, 2, 2020);
-        assertEquals(0, resposta.size());
+        List<Transferencia> resposta = repository.buscarTransferenciasPorPeriodo(1, dataInicioEditada, dataFimEditada);
+        assertEquals(1, resposta.size());
 
-        List<Transferencia> resposta2 = repository.buscarTransferenciasPorMesAno(1, 3, 2023);
-        assertNotNull(resposta2);
+        List<Transferencia> resposta2 = repository.buscarTransferenciasPorPeriodo(2, dataInicioEditada, dataFimEditada);
+        assertEquals(0, resposta2.size());
     }
 
     @Test
     public void testarBuscarTransferenciasPorNomeOperadorMesAno() {
-        List<Transferencia> resposta = repository.buscarTransferenciasPorMesAnoEoperador(1, "Beltrano", 6, 2020);
+        List<Transferencia> resposta = repository.buscarTransferenciasPorPeriodoEoperador(1, "Beltrano", dataInicioEditada, dataFimEditada);
         assertNotNull(resposta);
         assertEquals(resposta.get(0).getNomeOperadorTransacao(), "Beltrano");
 
-        List<Transferencia> resposta2 = repository.buscarTransferenciasPorMesAnoEoperador(1, "Beltrano", 6, 2023);
+        List<Transferencia> resposta2 = repository.buscarTransferenciasPorPeriodoEoperador(2, "Beltrano", dataInicioEditada, dataFimEditada);
         assertEquals(0, resposta2.size());
-    }*/
+    }
 }

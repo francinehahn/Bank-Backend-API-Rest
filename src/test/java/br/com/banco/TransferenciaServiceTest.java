@@ -13,9 +13,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -27,7 +30,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class TransferenciaServiceTest {
 
-    /*@Mock
+    @Mock
     private TransferenciaRepository repository;
 
     @InjectMocks
@@ -37,6 +40,7 @@ class TransferenciaServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    //Setando informações da TRANSFERENCIA1
     Conta conta1 = new Conta(1, "Fulano");
     Transferencia transferencia1 = new Transferencia(
         1, 
@@ -47,6 +51,7 @@ class TransferenciaServiceTest {
         conta1
     );
 
+    //Setando informações da TRANSFERENCIA2
     Conta conta2 = new Conta(2, "Sicrano");
     Transferencia transferencia2 = new Transferencia(
         2, 
@@ -59,6 +64,12 @@ class TransferenciaServiceTest {
 
     List<Transferencia> transferenciasEsperadas = Arrays.asList(transferencia1, transferencia2);
 
+    //Setando algumas datas para serem usadas nos testes
+    LocalDate dataInicio = LocalDate.parse("2023-01-10");
+    LocalDate dataFim = LocalDate.parse("2023-02-10");
+    Date dataInicioEditada = Date.from(dataInicio.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date dataFimEditada = Date.from(dataFim.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
     @Test
     public void buscarTodasTransferencias_DeveRetornarTransferenciasCorretas() {
         when(repository.buscarTodasTransferencias(1)).thenReturn(Arrays.asList(transferencia1));
@@ -70,13 +81,13 @@ class TransferenciaServiceTest {
     }
 
     @Test
-    public void buscarTransferencias_PorMesAno_DeveRetornarTransferenciasCorretas() {
-        when(repository.buscarTransferenciasPorMesAno(2, 01, 2023)).thenReturn(Arrays.asList(transferencia2));
-        List<Transferencia> transferencias = service.buscarTransferencias(2, null, 01, 2023);
+    public void buscarTransferencias_PorPeriodo_DeveRetornarTransferenciasCorretas() {
+        when(repository.buscarTransferenciasPorPeriodo(2, dataInicioEditada, dataFimEditada)).thenReturn(Arrays.asList(transferencia2));
+        List<Transferencia> transferencias = service.buscarTransferencias(2, null, "2023-01-10", "2023-02-10");
 
         assertEquals(1, transferencias.size());
         assertEquals(transferencia2, transferencias.get(0));
-        verify(repository, times(1)).buscarTransferenciasPorMesAno(2, 01, 2023);
+        verify(repository, times(1)).buscarTransferenciasPorPeriodo(2, dataInicioEditada, dataFimEditada);
     }
 
     @Test
@@ -92,26 +103,40 @@ class TransferenciaServiceTest {
 
     @Test
     public void buscarTransferencias_PorNomeOperadorEMesAno_DeveRetornarTransferenciasCorretas() {
-        when(repository.buscarTransferenciasPorMesAnoEoperador(2, "Beltrano", 01, 2023)).thenReturn(Arrays.asList(transferencia2));
-        List<Transferencia> transferencias = service.buscarTransferencias(2, "Beltrano", 01, 2023);
+        when(repository.buscarTransferenciasPorPeriodoEoperador(2, "Beltrano", dataInicioEditada, dataFimEditada)).thenReturn(Arrays.asList(transferencia2));
+        List<Transferencia> transferencias = service.buscarTransferencias(2, "Beltrano", "2023-01-10", "2023-02-10");
 
         assertEquals(1, transferencias.size());
         assertEquals(transferencia2, transferencias.get(0));
         assertEquals(transferencia2.getNomeOperadorTransacao(), transferencias.get(0).getNomeOperadorTransacao());
-        verify(repository, times(1)).buscarTransferenciasPorMesAnoEoperador(2, "Beltrano", 01, 2023);
+        verify(repository, times(1)).buscarTransferenciasPorPeriodoEoperador(2, "Beltrano", dataInicioEditada, dataFimEditada);
     }
 
     @Test
-    public void buscarTransferencias_ApenasAnoComoParametro_EsperaExcecao() {
+    public void buscarTransferencias_ApenasDataFimComoParametro_EsperaExcecao() {
         assertThrows(ParametroDeTempoException.class, () -> {
-            service.buscarTransferencias(1, null, null, 2023);
+            service.buscarTransferencias(1, null, null, "2022-10-05");
         });
     }
 
     @Test
-    public void buscarTransferencias_ApenasMesComoParametro_EsperaExcecao() {
+    public void buscarTransferencias_ApenasDataInicioComoParametro_EsperaExcecao() {
         assertThrows(ParametroDeTempoException.class, () -> {
-            service.buscarTransferencias(1, null, 01, null);
+            service.buscarTransferencias(1, null, "2022-10-05", null);
         });
-    }*/
+    }
+
+    @Test
+    public void buscarTransferencias_DataInicioAposDataFim_EsperaExcecao() {
+        assertThrows(ParametroDeTempoException.class, () -> {
+            service.buscarTransferencias(1, null, "2022-10-05", "2021-01-10");
+        });
+    }
+
+    @Test
+    public void buscarTransferencias_DataFimAposDataAtual_EsperaExcecao() {
+        assertThrows(ParametroDeTempoException.class, () -> {
+            service.buscarTransferencias(1, null, "2022-10-05", "2024-01-10");
+        });
+    }
 }
