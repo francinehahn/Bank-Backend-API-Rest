@@ -22,13 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TransferenciaRepositoryTest {
     
-    /*@Autowired
+    @Autowired
     private TransferenciaRepository repository;
 
     @Test
-    public void testarBuscarTodasTransferenciasPorIdConta() {
-        List<Transferencia> resposta = repository.buscarTransferenciasPorConta(1);
-        List<Transferencia> resposta2 = repository.buscarTransferenciasPorConta(2);
+    public void testarBuscarTodasTransferencias() {
+        List<Transferencia> resposta = repository.buscarTodasTransferencias(1);
+        List<Transferencia> resposta2 = repository.buscarTodasTransferencias(2);
   
         assertNotNull(resposta);
         assertEquals(resposta.get(0).getId(), 1);
@@ -38,7 +38,7 @@ public class TransferenciaRepositoryTest {
 
     @Test
     public void testarBuscarTodasTransferenciasPorNomeOperador() {
-        List<Transferencia> resposta = repository.buscarTransferenciasPorNomeOperador("Beltrano");
+        List<Transferencia> resposta = repository.buscarTransferenciasPorNomeOperador(1, "Beltrano");
 
         assertNotNull(resposta);
         assertEquals(resposta.get(0).getTipo(), "TRANSFERENCIA");
@@ -47,20 +47,20 @@ public class TransferenciaRepositoryTest {
 
     @Test
     public void testarBuscarTransferenciasPorMesAno() {
-        List<Transferencia> resposta = repository.buscarTransferenciasPorMesAno(2, 2020);
+        List<Transferencia> resposta = repository.buscarTransferenciasPorMesAno(1, 2, 2020);
         assertEquals(0, resposta.size());
 
-        List<Transferencia> resposta2 = repository.buscarTransferenciasPorMesAno(3, 2023);
+        List<Transferencia> resposta2 = repository.buscarTransferenciasPorMesAno(1, 3, 2023);
         assertNotNull(resposta2);
     }
 
     @Test
     public void testarBuscarTransferenciasPorNomeOperadorMesAno() {
-        List<Transferencia> resposta = repository.buscarTransferenciasPorMesAnoEoperador("Beltrano", 6, 2020);
+        List<Transferencia> resposta = repository.buscarTransferenciasPorMesAnoEoperador(1, "Beltrano", 6, 2020);
         assertNotNull(resposta);
         assertEquals(resposta.get(0).getNomeOperadorTransacao(), "Beltrano");
 
-        List<Transferencia> resposta2 = repository.buscarTransferenciasPorMesAnoEoperador("Beltrano", 6, 2023);
+        List<Transferencia> resposta2 = repository.buscarTransferenciasPorMesAnoEoperador(1, "Beltrano", 6, 2023);
         assertEquals(0, resposta2.size());
-    }*/
+    }
 }

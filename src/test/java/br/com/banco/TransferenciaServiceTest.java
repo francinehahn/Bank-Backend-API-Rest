@@ -3,7 +3,6 @@ package br.com.banco;
 import br.com.banco.entities.Conta;
 import br.com.banco.entities.Transferencia;
 import br.com.banco.exception.ParametroDeTempoException;
-import br.com.banco.exception.ParametrosInvalidosException;
 import br.com.banco.repositories.TransferenciaRepository;
 import br.com.banco.services.TransferenciaService;
 
@@ -28,7 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class TransferenciaServiceTest {
 
-    /*@Mock
+    @Mock
     private TransferenciaRepository repository;
 
     @InjectMocks
@@ -61,84 +60,58 @@ class TransferenciaServiceTest {
     List<Transferencia> transferenciasEsperadas = Arrays.asList(transferencia1, transferencia2);
 
     @Test
-    public void buscarTransferencias_PorConta_DeveRetornarTransferenciasCorretas() {
-        when(repository.buscarTransferenciasPorConta(1)).thenReturn(Arrays.asList(transferencia1));
+    public void buscarTodasTransferencias_DeveRetornarTransferenciasCorretas() {
+        when(repository.buscarTodasTransferencias(1)).thenReturn(Arrays.asList(transferencia1));
         List<Transferencia> transferencias = service.buscarTransferencias(1, null, null, null);
 
         assertEquals(1, transferencias.size());
         assertEquals(transferencia1, transferencias.get(0));
-        verify(repository, times(1)).buscarTransferenciasPorConta(1);
+        verify(repository, times(1)).buscarTodasTransferencias(1);
     }
 
     @Test
     public void buscarTransferencias_PorMesAno_DeveRetornarTransferenciasCorretas() {
-        when(repository.buscarTransferenciasPorMesAno(01, 2023)).thenReturn(transferenciasEsperadas);
-        List<Transferencia> transferencias = service.buscarTransferencias(null, null, 01, 2023);
+        when(repository.buscarTransferenciasPorMesAno(2, 01, 2023)).thenReturn(Arrays.asList(transferencia2));
+        List<Transferencia> transferencias = service.buscarTransferencias(2, null, 01, 2023);
 
-        assertEquals(2, transferencias.size());
-        assertEquals(transferencia1, transferencias.get(0));
-        assertEquals(transferencia2, transferencias.get(1));
-        verify(repository, times(1)).buscarTransferenciasPorMesAno(01, 2023);
+        assertEquals(1, transferencias.size());
+        assertEquals(transferencia2, transferencias.get(0));
+        verify(repository, times(1)).buscarTransferenciasPorMesAno(2, 01, 2023);
     }
 
     @Test
     public void buscarTransferencias_PorNomeOperador_DeveRetornarTransferenciasCorretas() {
-        when(repository.buscarTransferenciasPorNomeOperador("Beltrano")).thenReturn(Arrays.asList(transferencia2));
-        List<Transferencia> transferencias = service.buscarTransferencias(null, "Beltrano", null, null);
+        when(repository.buscarTransferenciasPorNomeOperador(2, "Beltrano")).thenReturn(Arrays.asList(transferencia2));
+        List<Transferencia> transferencias = service.buscarTransferencias(2, "Beltrano", null, null);
 
         assertEquals(1, transferencias.size());
         assertEquals(transferencia2, transferencias.get(0));
         assertEquals(transferencia2.getNomeOperadorTransacao(), transferencias.get(0).getNomeOperadorTransacao());
-        verify(repository, times(1)).buscarTransferenciasPorNomeOperador("Beltrano");
+        verify(repository, times(1)).buscarTransferenciasPorNomeOperador(2, "Beltrano");
     }
 
     @Test
     public void buscarTransferencias_PorNomeOperadorEMesAno_DeveRetornarTransferenciasCorretas() {
-        when(repository.buscarTransferenciasPorMesAnoEoperador("Beltrano", 01, 2023)).thenReturn(Arrays.asList(transferencia2));
-        List<Transferencia> transferencias = service.buscarTransferencias(null, "Beltrano", 01, 2023);
+        when(repository.buscarTransferenciasPorMesAnoEoperador(2, "Beltrano", 01, 2023)).thenReturn(Arrays.asList(transferencia2));
+        List<Transferencia> transferencias = service.buscarTransferencias(2, "Beltrano", 01, 2023);
 
         assertEquals(1, transferencias.size());
         assertEquals(transferencia2, transferencias.get(0));
         assertEquals(transferencia2.getNomeOperadorTransacao(), transferencias.get(0).getNomeOperadorTransacao());
-        verify(repository, times(1)).buscarTransferenciasPorMesAnoEoperador("Beltrano", 01, 2023);
-    }
-
-    @Test
-    public void buscarTransferencias_PorNomeOperadorEMesAnoV2_DeveRetornarTransferenciasCorretas() {
-        when(repository.buscarTransferenciasPorMesAnoEoperador("Beltrano", 01, 2023)).thenReturn(Arrays.asList(transferencia2));
-        List<Transferencia> transferencias = service.buscarTransferencias(1, "Beltrano", 01, 2023);
-
-        assertEquals(1, transferencias.size());
-        assertEquals(transferencia2, transferencias.get(0));
-        assertEquals(transferencia2.getNomeOperadorTransacao(), transferencias.get(0).getNomeOperadorTransacao());
-        verify(repository, times(1)).buscarTransferenciasPorMesAnoEoperador("Beltrano", 01, 2023);
+        verify(repository, times(1)).buscarTransferenciasPorMesAnoEoperador(2, "Beltrano", 01, 2023);
     }
 
     @Test
     public void buscarTransferencias_ApenasAnoComoParametro_EsperaExcecao() {
         assertThrows(ParametroDeTempoException.class, () -> {
-            service.buscarTransferencias(null, null, null, 2023);
+            service.buscarTransferencias(1, null, null, 2023);
         });
     }
 
     @Test
     public void buscarTransferencias_ApenasMesComoParametro_EsperaExcecao() {
         assertThrows(ParametroDeTempoException.class, () -> {
-            service.buscarTransferencias(null, null, 01, null);
+            service.buscarTransferencias(1, null, 01, null);
         });
     }
-
-    @Test
-    public void buscarTransferencias_idContaMesAnoComoParametros_EsperaExcecao() {
-        assertThrows(ParametrosInvalidosException.class, () -> {
-            service.buscarTransferencias(1, null, 01, 2023);
-        });
-    }
-
-    @Test
-    public void buscarTransferencias_idContaNomeOperadorComoParametros_EsperaExcecao() {
-        assertThrows(ParametrosInvalidosException.class, () -> {
-            service.buscarTransferencias(1, "Beltrano", null, null);
-        });
-    }*/
 }

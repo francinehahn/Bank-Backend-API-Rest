@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TransferenciaRepository extends JpaRepository<Transferencia, Integer> {
     @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId")
-    List<Transferencia> buscarTransferenciasPorConta(@Param("contaId") Integer contaId);
+    List<Transferencia> buscarTodasTransferencias(@Param("contaId") Integer contaId);
 
     @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.nomeOperadorTransacao = :nomeOperador")
     List<Transferencia> buscarTransferenciasPorNomeOperador(

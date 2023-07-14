@@ -32,7 +32,7 @@ public class TransferenciaService {
     } else if (mes != null && ano != null) {
       return repository.buscarTransferenciasPorMesAno(contaId, mes, ano);
     } else {
-      return repository.buscarTransferenciasPorConta(contaId);
+      return repository.buscarTodasTransferencias(contaId);
     }
   }
 }
