@@ -55,6 +55,7 @@ public class TransferenciaService {
       }
     }
 
+    //Cada query será chamada de acordo com o filtro usado
     if (nomeOperador != null && dataInicio != null & dataFim != null) {
       return repository.buscarTransferenciasPorPeriodoEoperador(contaId, nomeOperador, dataInicioEditada, dataFimEditada);
     } else if (nomeOperador != null) {
