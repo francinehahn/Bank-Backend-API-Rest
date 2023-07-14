@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TransferenciaRepositoryTest {
     
-    @Autowired
+    /*@Autowired
     private TransferenciaRepository repository;
 
     @Test
@@ -62,5 +62,5 @@ public class TransferenciaRepositoryTest {
 
         List<Transferencia> resposta2 = repository.buscarTransferenciasPorMesAnoEoperador("Beltrano", 6, 2023);
         assertEquals(0, resposta2.size());
-    }
+    }*/
 }

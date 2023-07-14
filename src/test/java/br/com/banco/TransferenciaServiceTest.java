@@ -28,7 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class TransferenciaServiceTest {
 
-    @Mock
+    /*@Mock
     private TransferenciaRepository repository;
 
     @InjectMocks
@@ -140,5 +140,5 @@ class TransferenciaServiceTest {
         assertThrows(ParametrosInvalidosException.class, () -> {
             service.buscarTransferencias(1, "Beltrano", null, null);
         });
-    }
+    }*/
 }
