@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
-public interface TransferenciaRepository extends JpaRepository<Transferencia, Integer> {
+public interface TransferenciaRepository extends JpaRepository<Transferencia, Long> {
     @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId")
     List<Transferencia> buscarTodasTransferencias(@Param("contaId") Integer contaId);
 
@@ -17,18 +19,19 @@ public interface TransferenciaRepository extends JpaRepository<Transferencia, In
         @Param("nomeOperador") String nomeOperador
     );
 
-    @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND YEAR(t.dataTransferencia) = :ano AND MONTH(t.dataTransferencia) = :mes")
+    @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.dataTransferencia >= :dataInicio AND t.dataTransferencia <= :dataFim")
     List<Transferencia> buscarTransferenciasPorMesAno(
         @Param("contaId") Integer contaId,
-        @Param("mes") int mes, @Param("ano") int ano
+        @Param("dataInicio") Date dataInicio, 
+        @Param("dataFim") Date dataFim
     );
 
-    @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.nomeOperadorTransacao = :nomeOperador AND YEAR(t.dataTransferencia) = :ano AND MONTH(t.dataTransferencia) = :mes")
+    @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.nomeOperadorTransacao = :nomeOperador AND t.dataTransferencia >= :dataInicio AND t.dataTransferencia <= :dataFim")
     List<Transferencia> buscarTransferenciasPorMesAnoEoperador(
         @Param("contaId") Integer contaId,
         @Param("nomeOperador") String nomeOperador,
-        @Param("mes") int mes,
-        @Param("ano") int ano
+        @Param("dataInicio") Date dataInicio, 
+        @Param("dataFim") Date dataFim
     );
 }
 

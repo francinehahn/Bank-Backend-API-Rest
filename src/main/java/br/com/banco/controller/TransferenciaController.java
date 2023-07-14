@@ -28,9 +28,9 @@ public class TransferenciaController {
     public List<Transferencia> buscarTransferencias(
         @PathVariable(required = true) Integer contaId,
         @RequestParam(required = false) String nomeOperador,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "MM") Integer mes,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy") Integer ano
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataInicio,
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFim
     ) {
-        return service.buscarTransferencias(contaId, nomeOperador, mes, ano);
+        return service.buscarTransferencias(contaId, nomeOperador, dataInicio, dataFim);
     }
 }

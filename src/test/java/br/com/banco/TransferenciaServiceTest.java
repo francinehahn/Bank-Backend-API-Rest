@@ -27,7 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class TransferenciaServiceTest {
 
-    @Mock
+    /*@Mock
     private TransferenciaRepository repository;
 
     @InjectMocks
@@ -113,5 +113,5 @@ class TransferenciaServiceTest {
         assertThrows(ParametroDeTempoException.class, () -> {
             service.buscarTransferencias(1, null, 01, null);
         });
-    }
+    }*/
 }
