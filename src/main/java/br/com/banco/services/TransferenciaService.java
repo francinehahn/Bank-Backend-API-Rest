@@ -56,11 +56,11 @@ public class TransferenciaService {
     }
 
     if (nomeOperador != null && dataInicio != null & dataFim != null) {
-      return repository.buscarTransferenciasPorMesAnoEoperador(contaId, nomeOperador, dataInicioEditada, dataFimEditada);
+      return repository.buscarTransferenciasPorPeriodoEoperador(contaId, nomeOperador, dataInicioEditada, dataFimEditada);
     } else if (nomeOperador != null) {
       return repository.buscarTransferenciasPorNomeOperador(contaId, nomeOperador);
     } else if (dataInicio != null && dataFim != null) {
-      return repository.buscarTransferenciasPorMesAno(contaId, dataInicioEditada, dataFimEditada);
+      return repository.buscarTransferenciasPorPeriodo(contaId, dataInicioEditada, dataFimEditada);
     } else {
       return repository.buscarTodasTransferencias(contaId);
     }

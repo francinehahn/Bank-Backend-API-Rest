@@ -19,14 +19,14 @@ public interface TransferenciaRepository extends JpaRepository<Transferencia, Lo
     );
 
     @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.dataTransferencia >= :dataInicio AND t.dataTransferencia <= :dataFim")
-    List<Transferencia> buscarTransferenciasPorMesAno(
+    List<Transferencia> buscarTransferenciasPorPeriodo(
         @Param("contaId") Integer contaId,
         @Param("dataInicio") Date dataInicio, 
         @Param("dataFim") Date dataFim
     );
 
     @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.nomeOperadorTransacao = :nomeOperador AND t.dataTransferencia >= :dataInicio AND t.dataTransferencia <= :dataFim")
-    List<Transferencia> buscarTransferenciasPorMesAnoEoperador(
+    List<Transferencia> buscarTransferenciasPorPeriodoEoperador(
         @Param("contaId") Integer contaId,
         @Param("nomeOperador") String nomeOperador,
         @Param("dataInicio") Date dataInicio, 
