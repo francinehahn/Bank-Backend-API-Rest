@@ -36,14 +36,12 @@ public class TransferenciaService {
 
     if (nomeOperador != null && mes != null & ano != null) {
       return repository.buscarTransferenciasPorMesAnoEoperador(nomeOperador, mes, ano);
-    } else if (contaId != null) {
-      return repository.buscarTransferenciasPorConta(contaId);
     } else if (nomeOperador != null) {
       return repository.buscarTransferenciasPorNomeOperador(nomeOperador);
     } else if (mes != null && ano != null) {
       return repository.buscarTransferenciasPorMesAno(mes, ano);
     } else {
-      return repository.buscarTodasTransferencias();
+      return repository.buscarTransferenciasPorConta(contaId);
     }
   }
 }

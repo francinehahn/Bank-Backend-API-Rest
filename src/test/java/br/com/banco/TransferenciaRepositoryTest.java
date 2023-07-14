@@ -26,14 +26,6 @@ public class TransferenciaRepositoryTest {
     private TransferenciaRepository repository;
 
     @Test
-    public void testarBuscarTodasAsTransferencias() {
-        List<Transferencia> resposta = repository.buscarTodasTransferencias();
-
-        assertNotNull(resposta);
-        assertEquals(resposta.get(0).getId(), 1);
-    }
-
-    @Test
     public void testarBuscarTodasTransferenciasPorIdConta() {
         List<Transferencia> resposta = repository.buscarTransferenciasPorConta(1);
         List<Transferencia> resposta2 = repository.buscarTransferenciasPorConta(2);

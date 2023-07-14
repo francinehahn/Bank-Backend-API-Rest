@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/transferencias")
+@RequestMapping("/usuario/{contaId}/transferencias")
 public class TransferenciaController {
 
     private final TransferenciaService service;
@@ -25,7 +26,7 @@ public class TransferenciaController {
 
     @GetMapping
     public List<Transferencia> buscarTransferencias(
-        @RequestParam(required = false) Integer contaId, 
+        @PathVariable(required = true) Integer contaId,
         @RequestParam(required = false) String nomeOperador,
         @RequestParam(required = false) @DateTimeFormat(pattern = "MM") Integer mes,
         @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy") Integer ano
