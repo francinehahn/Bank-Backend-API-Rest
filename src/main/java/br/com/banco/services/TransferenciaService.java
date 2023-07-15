@@ -2,12 +2,16 @@ package br.com.banco.services;
 
 import br.com.banco.entities.Transferencia;
 import br.com.banco.exception.ParametroDeTempoException;
-import br.com.banco.exception.ParametrosInvalidosException;
 import br.com.banco.repositories.TransferenciaRepository;
+import br.com.banco.utils.Datas;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
+
+import java.util.Date;
 
 @Service
 public class TransferenciaService {
@@ -18,32 +22,38 @@ public class TransferenciaService {
       this.repository = repository;
   }
 
-  public List<Transferencia> buscarTransferencias(
-    Integer contaId, String nomeOperador, Integer mes, Integer ano
+  public Page<Transferencia> buscarTransferencias(
+    Integer contaId, String nomeOperador, String dataInicio, String dataFim, Integer numeroPagina
   ) {
-    
-    if ((mes == null && ano != null) || mes != null && ano == null) {
-        throw new ParametroDeTempoException("Você não pode passar como parâmetro apenas o mês ou o ano.");
+    //O usuário não pode passar apenas a data de início ou apenas a data de fim
+    if ((dataInicio == null && dataFim != null) || (dataInicio != null && dataFim == null)) {
+        throw new ParametroDeTempoException("Você não pode passar como parâmetro apenas a data de inicio ou apenas a data de fim.");
     }
 
-    if (contaId != null && nomeOperador != null && mes == null && ano == null) {
-        throw new ParametrosInvalidosException("Você não pode passar o id da conta e o nome do operador como parâmetros. Os dois só podem ser passados em conjunto se o mês e o ano forem informados também.");
+    Date dataInicioEditada = null;
+    Date dataFimEditada = null;
+
+    if (dataInicio != null && dataFim != null) {
+        //Transformando as datas para o tipo Date
+        dataInicioEditada = Datas.transformarData(dataInicio);
+        dataFimEditada = Datas.transformarData(dataFim);
+
+        //Validação das datas
+        Datas.validarDatas(dataInicioEditada, dataFimEditada);
     }
 
-    if (contaId != null && mes != null && ano != null && nomeOperador == null) {
-        throw new ParametrosInvalidosException("Você não pode passar o id da conta e o mês e o ano como parâmetros. Eles só podem ser passados em conjunto se o nome do operador for informado também.");
-    }
+    int tamanhoPagina = 4;
+    Pageable pageable = PageRequest.of(numeroPagina, tamanhoPagina);
 
-    if (nomeOperador != null && mes != null & ano != null) {
-      return repository.buscarTransferenciasPorMesAnoEoperador(nomeOperador, mes, ano);
-    } else if (contaId != null) {
-      return repository.buscarTransferenciasPorConta(contaId);
+    //Cada query será chamada de acordo com o filtro usado
+    if (nomeOperador != null && dataInicio != null & dataFim != null) {
+      return repository.buscarTransferenciasPorPeriodoEoperador(contaId, nomeOperador, dataInicioEditada, dataFimEditada, pageable);
     } else if (nomeOperador != null) {
-      return repository.buscarTransferenciasPorNomeOperador(nomeOperador);
-    } else if (mes != null && ano != null) {
-      return repository.buscarTransferenciasPorMesAno(mes, ano);
+      return repository.buscarTransferenciasPorNomeOperador(contaId, nomeOperador, pageable);
+    } else if (dataInicio != null && dataFim != null) {
+      return repository.buscarTransferenciasPorPeriodo(contaId, dataInicioEditada, dataFimEditada, pageable);
     } else {
-      return repository.buscarTodasTransferencias();
+      return repository.buscarTodasTransferencias(contaId, pageable);
     }
   }
 }

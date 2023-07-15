@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 @RestController
-@RequestMapping("/transferencias")
+@RequestMapping("/usuario/{contaId}/transferencias")
 public class TransferenciaController {
 
     private final TransferenciaService service;
@@ -22,14 +23,16 @@ public class TransferenciaController {
     public TransferenciaController(TransferenciaService service) {
         this.service = service;
     }
-
+    
     @GetMapping
-    public List<Transferencia> buscarTransferencias(
-        @RequestParam(required = false) Integer contaId, 
+    public ResponseEntity<Page<Transferencia>> buscarTransferencias(
+        @PathVariable(required = true) Integer contaId,
         @RequestParam(required = false) String nomeOperador,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "MM") Integer mes,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy") Integer ano
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataInicio,
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFim,
+        @RequestParam(defaultValue = "0") Integer numeroPagina
     ) {
-        return service.buscarTransferencias(contaId, nomeOperador, mes, ano);
+        Page<Transferencia> transferencias = service.buscarTransferencias(contaId, nomeOperador, dataInicio, dataFim, numeroPagina);
+        return ResponseEntity.ok(transferencias);
     }
 }
