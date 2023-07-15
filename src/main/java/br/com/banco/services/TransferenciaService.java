@@ -3,6 +3,7 @@ package br.com.banco.services;
 import br.com.banco.entities.Transferencia;
 import br.com.banco.exception.ParametroDeTempoException;
 import br.com.banco.repositories.TransferenciaRepository;
+import br.com.banco.utils.Datas;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,20 +42,8 @@ public class TransferenciaService {
         dataInicioEditada = Date.from(dataInicioLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         dataFimEditada = Date.from(dataFimLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        //A data de início não pode ser após a data de fim
-        if (dataInicioEditada.compareTo(dataFimEditada) > 0) {
-            throw new ParametroDeTempoException("A data de início não pode ser após a data de fim.");
-        }
-
-        //A data de fim não pode ser após a data do dia atual
-        if (new Date().compareTo(dataFimEditada) < 0) {
-            throw new ParametroDeTempoException("A data de fim não pode ser após a data atual.");
-        }
-
-        //A data de início não pode ser após a data do dia atual
-        if (new Date().compareTo(dataInicioEditada) < 0) {
-            throw new ParametroDeTempoException("A data de início não pode ser após a data atual.");
-        }
+        //Validação das datas
+        Datas.validarDatas(dataInicioEditada, dataFimEditada);
     }
 
     int tamanhoPagina = 4;
