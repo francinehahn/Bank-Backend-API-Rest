@@ -4,8 +4,6 @@ import br.com.banco.exception.ParametroDeTempoException;
 import br.com.banco.repositories.SaldoRepository;
 import br.com.banco.utils.Datas;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +29,8 @@ public class SaldoService {
 
         if (dataInicio != null && dataFim != null) {
             //Transformando as datas para o tipo Date
-            LocalDate dataInicioLocalDate = LocalDate.parse(dataInicio);
-            LocalDate dataFimLocalDate = LocalDate.parse(dataFim);
-            dataInicioEditada = Date.from(dataInicioLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            dataFimEditada = Date.from(dataFimLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            dataInicioEditada = Datas.transformarData(dataInicio);
+            dataFimEditada = Datas.transformarData(dataFim);
 
             //Validação das datas
             Datas.validarDatas(dataInicioEditada, dataFimEditada);

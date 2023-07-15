@@ -11,8 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 
 @Service
@@ -37,10 +35,8 @@ public class TransferenciaService {
 
     if (dataInicio != null && dataFim != null) {
         //Transformando as datas para o tipo Date
-        LocalDate dataInicioLocalDate = LocalDate.parse(dataInicio);
-        LocalDate dataFimLocalDate = LocalDate.parse(dataFim);
-        dataInicioEditada = Date.from(dataInicioLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        dataFimEditada = Date.from(dataFimLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        dataInicioEditada = Datas.transformarData(dataInicio);
+        dataFimEditada = Datas.transformarData(dataFim);
 
         //Validação das datas
         Datas.validarDatas(dataInicioEditada, dataFimEditada);
