@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -23,14 +24,15 @@ public class TransferenciaController {
     public TransferenciaController(TransferenciaService service) {
         this.service = service;
     }
-
+    
     @GetMapping
-    public List<Transferencia> buscarTransferencias(
+    public ResponseEntity<List<Transferencia>> buscarTransferencias(
         @PathVariable(required = true) Integer contaId,
         @RequestParam(required = false) String nomeOperador,
         @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataInicio,
         @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFim
     ) {
-        return service.buscarTransferencias(contaId, nomeOperador, dataInicio, dataFim);
+        List<Transferencia> transferencias = service.buscarTransferencias(contaId, nomeOperador, dataInicio, dataFim);
+        return ResponseEntity.ok(transferencias);
     }
 }
