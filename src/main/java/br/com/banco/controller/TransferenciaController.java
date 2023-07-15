@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/usuario/{contaId}/transferencias")
@@ -26,13 +25,14 @@ public class TransferenciaController {
     }
     
     @GetMapping
-    public ResponseEntity<List<Transferencia>> buscarTransferencias(
+    public ResponseEntity<Page<Transferencia>> buscarTransferencias(
         @PathVariable(required = true) Integer contaId,
         @RequestParam(required = false) String nomeOperador,
         @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataInicio,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFim
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") String dataFim,
+        @RequestParam(defaultValue = "0") Integer numeroPagina
     ) {
-        List<Transferencia> transferencias = service.buscarTransferencias(contaId, nomeOperador, dataInicio, dataFim);
+        Page<Transferencia> transferencias = service.buscarTransferencias(contaId, nomeOperador, dataInicio, dataFim, numeroPagina);
         return ResponseEntity.ok(transferencias);
     }
 }

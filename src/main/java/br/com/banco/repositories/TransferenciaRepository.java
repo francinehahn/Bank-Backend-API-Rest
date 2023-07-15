@@ -1,40 +1,52 @@
 package br.com.banco.repositories;
 
 import br.com.banco.entities.Transferencia;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Date;
-import java.util.List;
 
 public interface TransferenciaRepository extends JpaRepository<Transferencia, Long> {
     //Buscar todas as transferencias do usuario - sem uso de filtro
-    @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId")
-    List<Transferencia> buscarTodasTransferencias(@Param("contaId") Integer contaId);
+    @Query(value = "SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId",
+    countQuery = "SELECT COUNT(t) FROM Transferencia t JOIN t.conta c WHERE c.idConta = :contaId")
+    Page<Transferencia> buscarTodasTransferencias(
+        @Param("contaId") Integer contaId,
+        @Param("pagina") Pageable pageable
+    );
 
     //Buscar as transferencias do usuario - filtro por nome do operador
-    @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.nomeOperadorTransacao = :nomeOperador")
-    List<Transferencia> buscarTransferenciasPorNomeOperador(
+    @Query(value = "SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.nomeOperadorTransacao = :nomeOperador",
+    countQuery = "SELECT COUNT(t) FROM Transferencia t JOIN t.conta c WHERE c.idConta = :contaId")
+    Page<Transferencia> buscarTransferenciasPorNomeOperador(
         @Param("contaId") Integer contaId,
-        @Param("nomeOperador") String nomeOperador
+        @Param("nomeOperador") String nomeOperador,
+        @Param("pagina") Pageable pageable
     );
 
     //Buscar as transferencias do usuario - filtro por periodo
-    @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.dataTransferencia >= :dataInicio AND t.dataTransferencia <= :dataFim")
-    List<Transferencia> buscarTransferenciasPorPeriodo(
+    @Query(value = "SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.dataTransferencia >= :dataInicio AND t.dataTransferencia <= :dataFim",
+    countQuery = "SELECT COUNT(t) FROM Transferencia t JOIN t.conta c WHERE c.idConta = :contaId")
+    Page<Transferencia> buscarTransferenciasPorPeriodo(
         @Param("contaId") Integer contaId,
         @Param("dataInicio") Date dataInicio, 
-        @Param("dataFim") Date dataFim
+        @Param("dataFim") Date dataFim,
+        @Param("pagina") Pageable pageable
     );
 
     //Buscar as transferencias do usuario - filtro por nome do operador e periodo
-    @Query("SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.nomeOperadorTransacao = :nomeOperador AND t.dataTransferencia >= :dataInicio AND t.dataTransferencia <= :dataFim")
-    List<Transferencia> buscarTransferenciasPorPeriodoEoperador(
+    @Query(value = "SELECT t FROM Transferencia t JOIN FETCH t.conta c WHERE c.idConta = :contaId AND t.nomeOperadorTransacao = :nomeOperador AND t.dataTransferencia >= :dataInicio AND t.dataTransferencia <= :dataFim",
+    countQuery = "SELECT COUNT(t) FROM Transferencia t JOIN t.conta c WHERE c.idConta = :contaId")
+    Page<Transferencia> buscarTransferenciasPorPeriodoEoperador(
         @Param("contaId") Integer contaId,
         @Param("nomeOperador") String nomeOperador,
         @Param("dataInicio") Date dataInicio, 
-        @Param("dataFim") Date dataFim
+        @Param("dataFim") Date dataFim,
+        @Param("pagina") Pageable pageable
     );
 }
 

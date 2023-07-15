@@ -5,9 +5,11 @@ import br.com.banco.exception.ParametroDeTempoException;
 import br.com.banco.repositories.TransferenciaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -21,8 +23,8 @@ public class TransferenciaService {
       this.repository = repository;
   }
 
-  public List<Transferencia> buscarTransferencias(
-    Integer contaId, String nomeOperador, String dataInicio, String dataFim
+  public Page<Transferencia> buscarTransferencias(
+    Integer contaId, String nomeOperador, String dataInicio, String dataFim, Integer numeroPagina
   ) {
     //O usuário não pode passar apenas a data de início ou apenas a data de fim
     if ((dataInicio == null && dataFim != null) || (dataInicio != null && dataFim == null)) {
@@ -55,15 +57,18 @@ public class TransferenciaService {
         }
     }
 
+    int tamanhoPagina = 4;
+    Pageable pageable = PageRequest.of(numeroPagina, tamanhoPagina);
+
     //Cada query será chamada de acordo com o filtro usado
     if (nomeOperador != null && dataInicio != null & dataFim != null) {
-      return repository.buscarTransferenciasPorPeriodoEoperador(contaId, nomeOperador, dataInicioEditada, dataFimEditada);
+      return repository.buscarTransferenciasPorPeriodoEoperador(contaId, nomeOperador, dataInicioEditada, dataFimEditada, pageable);
     } else if (nomeOperador != null) {
-      return repository.buscarTransferenciasPorNomeOperador(contaId, nomeOperador);
+      return repository.buscarTransferenciasPorNomeOperador(contaId, nomeOperador, pageable);
     } else if (dataInicio != null && dataFim != null) {
-      return repository.buscarTransferenciasPorPeriodo(contaId, dataInicioEditada, dataFimEditada);
+      return repository.buscarTransferenciasPorPeriodo(contaId, dataInicioEditada, dataFimEditada, pageable);
     } else {
-      return repository.buscarTodasTransferencias(contaId);
+      return repository.buscarTodasTransferencias(contaId, pageable);
     }
   }
 }
