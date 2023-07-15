@@ -6,12 +6,6 @@ import br.com.banco.exception.ParametroDeTempoException;
 import br.com.banco.repositories.TransferenciaRepository;
 import br.com.banco.services.TransferenciaService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,18 +13,26 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
 class TransferenciaServiceTest {
 
-    /*@Mock
+    @Mock
     private TransferenciaRepository repository;
 
     @InjectMocks
@@ -62,7 +64,8 @@ class TransferenciaServiceTest {
         conta2
     );
 
-    List<Transferencia> transferenciasEsperadas = Arrays.asList(transferencia1, transferencia2);
+    Pageable pageable = PageRequest.of(0, 4);
+    Page<Transferencia> transferenciasEsperadas = new PageImpl<>(Arrays.asList(transferencia1, transferencia2));
 
     //Setando algumas datas para serem usadas nos testes
     LocalDate dataInicio = LocalDate.parse("2023-01-10");
@@ -72,71 +75,89 @@ class TransferenciaServiceTest {
 
     @Test
     public void buscarTodasTransferencias_DeveRetornarTransferenciasCorretas() {
-        when(repository.buscarTodasTransferencias(1)).thenReturn(Arrays.asList(transferencia1));
-        List<Transferencia> transferencias = service.buscarTransferencias(1, null, null, null);
+        when(repository.buscarTodasTransferencias(1, pageable)).thenReturn(new PageImpl<>(Arrays.asList(transferencia1)));
+        Page<Transferencia> transferencias = service.buscarTransferencias(
+            1, null, null, null, 0
+        );
 
-        assertEquals(1, transferencias.size());
-        assertEquals(transferencia1, transferencias.get(0));
-        verify(repository, times(1)).buscarTodasTransferencias(1);
+        assertEquals(1, transferencias.getContent().size());
+        assertEquals(transferencia1, transferencias.getContent().get(0));
+        verify(repository, times(1)).buscarTodasTransferencias(1, pageable);
     }
 
     @Test
     public void buscarTransferencias_PorPeriodo_DeveRetornarTransferenciasCorretas() {
-        when(repository.buscarTransferenciasPorPeriodo(2, dataInicioEditada, dataFimEditada)).thenReturn(Arrays.asList(transferencia2));
-        List<Transferencia> transferencias = service.buscarTransferencias(2, null, "2023-01-10", "2023-02-10");
+        when(repository.buscarTransferenciasPorPeriodo(2, dataInicioEditada, dataFimEditada, pageable))
+            .thenReturn(new PageImpl<>(Arrays.asList(transferencia2)));
+        Page<Transferencia> transferencias = service.buscarTransferencias(
+            2, null, "2023-01-10", "2023-02-10", 0
+        );
 
-        assertEquals(1, transferencias.size());
-        assertEquals(transferencia2, transferencias.get(0));
-        verify(repository, times(1)).buscarTransferenciasPorPeriodo(2, dataInicioEditada, dataFimEditada);
+        assertEquals(1, transferencias.getContent().size());
+        assertEquals(transferencia2, transferencias.getContent().get(0));
+        verify(repository, times(1)).buscarTransferenciasPorPeriodo(
+            2, dataInicioEditada, dataFimEditada, pageable
+        );
     }
 
     @Test
     public void buscarTransferencias_PorNomeOperador_DeveRetornarTransferenciasCorretas() {
-        when(repository.buscarTransferenciasPorNomeOperador(2, "Beltrano")).thenReturn(Arrays.asList(transferencia2));
-        List<Transferencia> transferencias = service.buscarTransferencias(2, "Beltrano", null, null);
+        when(repository.buscarTransferenciasPorNomeOperador(2, "Beltrano", pageable))
+            .thenReturn(new PageImpl<>(Arrays.asList(transferencia2)));
+        Page<Transferencia> transferencias = service.buscarTransferencias(
+            2, "Beltrano", null, null, 0
+        );
 
-        assertEquals(1, transferencias.size());
-        assertEquals(transferencia2, transferencias.get(0));
-        assertEquals(transferencia2.getNomeOperadorTransacao(), transferencias.get(0).getNomeOperadorTransacao());
-        verify(repository, times(1)).buscarTransferenciasPorNomeOperador(2, "Beltrano");
+        assertEquals(1, transferencias.getContent().size());
+        assertEquals(transferencia2, transferencias.getContent().get(0));
+        assertEquals(transferencia2.getNomeOperadorTransacao(), transferencias.getContent().get(0).getNomeOperadorTransacao());
+        verify(repository, times(1)).buscarTransferenciasPorNomeOperador(
+            2, "Beltrano", pageable
+        );
     }
 
     @Test
     public void buscarTransferencias_PorNomeOperadorEMesAno_DeveRetornarTransferenciasCorretas() {
-        when(repository.buscarTransferenciasPorPeriodoEoperador(2, "Beltrano", dataInicioEditada, dataFimEditada)).thenReturn(Arrays.asList(transferencia2));
-        List<Transferencia> transferencias = service.buscarTransferencias(2, "Beltrano", "2023-01-10", "2023-02-10");
+        when(repository.buscarTransferenciasPorPeriodoEoperador(
+            2, "Beltrano", dataInicioEditada, dataFimEditada, pageable
+        )).thenReturn(new PageImpl<>(Arrays.asList(transferencia2)));
+        Page<Transferencia> transferencias = service.buscarTransferencias(
+            2, "Beltrano", "2023-01-10", "2023-02-10", 0
+        );
 
-        assertEquals(1, transferencias.size());
-        assertEquals(transferencia2, transferencias.get(0));
-        assertEquals(transferencia2.getNomeOperadorTransacao(), transferencias.get(0).getNomeOperadorTransacao());
-        verify(repository, times(1)).buscarTransferenciasPorPeriodoEoperador(2, "Beltrano", dataInicioEditada, dataFimEditada);
+        assertEquals(1, transferencias.getContent().size());
+        assertEquals(transferencia2, transferencias.getContent().get(0));
+        assertEquals(transferencia2.getNomeOperadorTransacao(), transferencias.getContent().get(0).getNomeOperadorTransacao());
+        verify(repository, times(1)).buscarTransferenciasPorPeriodoEoperador(
+            2, "Beltrano", dataInicioEditada, dataFimEditada, pageable
+        );
     }
 
     @Test
     public void buscarTransferencias_ApenasDataFimComoParametro_EsperaExcecao() {
         assertThrows(ParametroDeTempoException.class, () -> {
-            service.buscarTransferencias(1, null, null, "2022-10-05");
+            service.buscarTransferencias(1, null, null, "2022-10-05", 0);
         });
     }
 
     @Test
     public void buscarTransferencias_ApenasDataInicioComoParametro_EsperaExcecao() {
         assertThrows(ParametroDeTempoException.class, () -> {
-            service.buscarTransferencias(1, null, "2022-10-05", null);
+            service.buscarTransferencias(1, null, "2022-10-05", null, 0);
         });
     }
 
     @Test
     public void buscarTransferencias_DataInicioAposDataFim_EsperaExcecao() {
         assertThrows(ParametroDeTempoException.class, () -> {
-            service.buscarTransferencias(1, null, "2022-10-05", "2021-01-10");
+            service.buscarTransferencias(1, null, "2022-10-05", "2021-01-10", 0);
         });
     }
 
     @Test
     public void buscarTransferencias_DataFimAposDataAtual_EsperaExcecao() {
         assertThrows(ParametroDeTempoException.class, () -> {
-            service.buscarTransferencias(1, null, "2022-10-05", "2024-01-10");
+            service.buscarTransferencias(1, null, "2022-10-05", "2024-01-10", 0);
         });
-    }*/
+    }
 }

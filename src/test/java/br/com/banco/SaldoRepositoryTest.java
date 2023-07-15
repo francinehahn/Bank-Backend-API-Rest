@@ -1,6 +1,6 @@
 package br.com.banco;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import br.com.banco.repositories.SaldoRepository;
 
 import java.util.Date;
 import java.time.LocalDate;
@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-
-import br.com.banco.repositories.SaldoRepository;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
