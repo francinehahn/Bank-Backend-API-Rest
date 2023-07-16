@@ -18,7 +18,7 @@ public class SaldoService {
         this.repository = repository;
     }
 
-    public double calculaSaldo(Integer contaId, String dataInicio, String dataFim) {
+    public Double calculaSaldo(Integer contaId, String dataInicio, String dataFim) {
         //O usuário não pode passar apenas a data de início ou apenas a data de fim
         if ((dataInicio == null && dataFim != null) || (dataInicio != null && dataFim == null)) {
             throw new ParametroDeTempoException("Você não pode passar como parâmetro apenas a data de inicio ou apenas a data de fim.");
@@ -37,7 +37,8 @@ public class SaldoService {
         }
 
         if (dataInicio != null && dataFim != null) {
-            return repository.calculaSaldoNoPeriodo(contaId, dataInicioEditada, dataFimEditada);
+            Double saldo = repository.calculaSaldoNoPeriodo(contaId, dataInicioEditada, dataFimEditada);
+            return saldo == null? 0.00 : saldo;
         } else {
             return repository.calculaSaldoTotal(contaId);
         }

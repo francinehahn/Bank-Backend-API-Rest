@@ -15,7 +15,7 @@ public interface SaldoRepository extends JpaRepository<Transferencia, Long> {
 
     //Calcular o saldo no periodo
     @Query("SELECT SUM(t.valor) FROM Transferencia t WHERE t.conta.id = :contaId AND t.dataTransferencia >= :dataInicio AND t.dataTransferencia <= :dataFim")
-    double calculaSaldoNoPeriodo(
+    Double calculaSaldoNoPeriodo(
         @Param("contaId") Integer contaId,
         @Param("dataInicio") Date dataInicio, 
         @Param("dataFim") Date dataFim
