@@ -11,12 +11,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SaldoService {
-    private SaldoRepository repository;
-
     @Autowired
-    public SaldoService(SaldoRepository repository) {
-        this.repository = repository;
-    }
+    private SaldoRepository repository;
 
     public Double calculaSaldo(Integer contaId, String dataInicio, String dataFim) {
         //O usuário não pode passar apenas a data de início ou apenas a data de fim
