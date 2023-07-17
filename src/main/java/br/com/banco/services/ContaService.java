@@ -10,12 +10,8 @@ import br.com.banco.repositories.ContaRepository;
 
 @Service
 public class ContaService {
-    private ContaRepository repository;
-
     @Autowired
-    public ContaService(ContaRepository repository) {
-        this.repository = repository;
-    }
+    private ContaRepository repository;
 
     public List<Conta> retornaContas() {
         return repository.retornaContas();

@@ -19,12 +19,8 @@ import org.springframework.http.ResponseEntity;
 @CrossOrigin(origins = "http://localhost:5173")
 public class TransferenciaController {
 
-    private final TransferenciaService service;
-
     @Autowired
-    public TransferenciaController(TransferenciaService service) {
-        this.service = service;
-    }
+    private TransferenciaService service;
     
     @GetMapping
     public ResponseEntity<Page<Transferencia>> buscarTransferencias(

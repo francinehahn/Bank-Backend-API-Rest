@@ -15,12 +15,8 @@ import java.util.Date;
 
 @Service
 public class TransferenciaService {
-  private TransferenciaRepository repository;
-
   @Autowired
-  public TransferenciaService(TransferenciaRepository repository) {
-      this.repository = repository;
-  }
+  private TransferenciaRepository repository;
 
   public Page<Transferencia> buscarTransferencias(
     Integer contaId, String nomeOperador, String dataInicio, String dataFim, Integer numeroPagina

@@ -17,12 +17,9 @@ import org.springframework.http.ResponseEntity;
 @RequestMapping("/usuario/{contaId}/saldo")
 @CrossOrigin(origins = "http://localhost:5173")
 public class SaldoController {
-    private final SaldoService service;
-
+    
     @Autowired
-    public SaldoController(SaldoService service) {
-        this.service = service;
-    }
+    private SaldoService service;
 
     @GetMapping
     public ResponseEntity<Double> calculaSaldo(
