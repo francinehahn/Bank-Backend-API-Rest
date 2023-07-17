@@ -18,12 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/usuarios")
 @CrossOrigin(origins = "http://localhost:5173")
 public class ContaController {
-    private final ContaService service;
 
     @Autowired
-    public ContaController(ContaService service) {
-        this.service = service;
-    }
+    private ContaService service;
 
     @GetMapping
     public ResponseEntity<List<Conta>> retornaContas() {
