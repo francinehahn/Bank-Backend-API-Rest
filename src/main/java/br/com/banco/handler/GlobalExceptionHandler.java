@@ -1,7 +1,7 @@
 package br.com.banco.handler;
 
 import br.com.banco.exception.ParametroDeTempoException;
-import br.com.banco.entities.RespostaDeErro;
+import br.com.banco.model.RespostaDeErro;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

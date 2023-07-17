@@ -1,4 +1,4 @@
-package br.com.banco.entities;
+package br.com.banco.model;
 
 public class RespostaDeErro {
     private int status;
